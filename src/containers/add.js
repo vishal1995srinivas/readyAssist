@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Button } from 'antd';
-import { Switch } from 'antd';
+import { withAlert } from 'react-alert';
 import createUser from '../helpers/addData';
 class AddButton extends Component {
 	state = { visible: false, error: '', loading: false, username: '', firstName: '', lastName: '', isActive: true };
@@ -23,6 +23,12 @@ class AddButton extends Component {
 			console.log(result);
 			if (result.status === 'success') {
 				addNewEntry(username, firstName, lastName, isActive);
+			} else {
+				if (result.message === 'User already exists!!!') {
+					this.props.alert.error(`User already exists. Please try with another username`);
+				} else {
+					this.props.alert.error(`Error Saving to  Database`);
+				}
 			}
 			this.setState({ visible: false, loading: false });
 		} catch (error) {
@@ -52,7 +58,6 @@ class AddButton extends Component {
 		this.setState({ isActive: checked });
 	};
 	render() {
-		console.log(this.state);
 		const { loading } = this.state;
 		return (
 			<div>
@@ -80,4 +85,4 @@ class AddButton extends Component {
 		);
 	}
 }
-export default AddButton;
+export default withAlert()(AddButton);
