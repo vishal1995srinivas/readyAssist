@@ -30,7 +30,7 @@ class AddButton extends Component {
 					this.props.alert.error(`Error Saving to  Database`);
 				}
 			}
-			this.setState({ visible: false, loading: false });
+			this.setState({ visible: false, loading: false, username: '', firstName: '', lastName: '' });
 		} catch (error) {
 			console.log(error);
 			this.setState({ error: error, loading: false });
@@ -58,7 +58,7 @@ class AddButton extends Component {
 		this.setState({ isActive: checked });
 	};
 	render() {
-		const { loading } = this.state;
+		const { loading, firstName, lastName, username } = this.state;
 		return (
 			<div>
 				<Button type="primary" onClick={this.showModal}>
@@ -68,15 +68,15 @@ class AddButton extends Component {
 					<form>
 						<div className="formField">
 							Username &nbsp;
-							<input type="text" onChange={this.usernameChange} required />
+							<input type="text" value={username} onChange={this.usernameChange} required />
 						</div>
 						<div>
 							First Name &nbsp;
-							<input type="text" onChange={this.firstNameChange} required />
+							<input type="text" value={firstName} onChange={this.firstNameChange} required />
 						</div>
 						<div>
 							Last Name &nbsp;
-							<input type="text" onChange={this.lastNameChange} />
+							<input type="text" value={lastName} onChange={this.lastNameChange} />
 						</div>
 						{loading && <div>Loading...</div>}
 					</form>

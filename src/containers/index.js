@@ -4,6 +4,7 @@ import { Table, Tag, Space } from 'antd';
 import { withAlert } from 'react-alert';
 import getUserData from '../helpers';
 import updateUser from '../helpers/update';
+import deleteUser from '../helpers/delete';
 import AddButton from './add';
 import './index.css';
 class TableComponent extends Component {
@@ -80,6 +81,39 @@ class TableComponent extends Component {
 		newUserData.unshift(newUser);
 		console.log(newUserData);
 		this.props.alert.success('New entry added successfully');
+		this.setState({
+			userData: newUserData,
+			username: '',
+			firstname: '',
+			lastname: ''
+		});
+	};
+	deleteRecord = async (id) => {
+		try {
+			let bodyData = {
+				id: id
+			};
+			let result = await deleteUser(bodyData);
+			if (result.status === 'success') {
+				this.deleteEntry(id);
+			} else {
+				this.props.alert.error(`Error deleting user in database. Please try again`);
+			}
+			this.setState({ visible: false, updateLoading: false });
+		} catch (error) {
+			console.log(error);
+			this.setState({ error: error, updateLoading: false });
+		}
+	};
+	deleteEntry = (id) => {
+		const { userData } = this.state;
+		let newUserData = [ ...userData ];
+		newUserData.forEach((user, index) => {
+			if (user._id === id) {
+				user.isActive = false;
+			}
+		});
+		this.props.alert.success('New entry deleted successfully');
 		this.setState({ userData: newUserData });
 	};
 	editNewEntry = (id, firstName, lastName) => {
@@ -147,9 +181,16 @@ class TableComponent extends Component {
 								console.log(record);
 							}}
 						>
-							Edit
+							Edit ✏
 						</a>
-						<a>Delete</a>
+						<a
+							onClick={() => {
+								this.deleteRecord(record.key);
+								console.log(record);
+							}}
+						>
+							Delete 🛢
+						</a>
 					</Space>
 				)
 			}
@@ -167,12 +208,11 @@ class TableComponent extends Component {
 				newData.push(newUser);
 			});
 		}
+
 		return (
 			<div>
-				<div>
-					<AddButton addNewEntry={addNewEntry} />
-				</div>
 				{isLoading ? <div>loading...</div> : <Table columns={columns} dataSource={newData} />}
+				<AddButton addNewEntry={addNewEntry} />
 				<Modal title="Edit User" visible={this.state.visible} onOk={this.handleOk} onCancel={this.handleCancel}>
 					<form>
 						<div className="formField">
