@@ -1,3 +1,10 @@
+# Project Logo
+<p align="center">
+  <a href="https://github.com/vishal1995srinivas/readyAssist">
+    <img src="screenshot.png" alt="Logo" width="200" height="100">
+  </a>
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
